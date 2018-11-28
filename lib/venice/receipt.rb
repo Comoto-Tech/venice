@@ -66,12 +66,34 @@ module Venice
         end
       end
 
-      @pending_renewal_info = []
-      if original_json_response && original_json_response['pending_renewal_info']
-        original_json_response['pending_renewal_info'].each do |pending_renewal_attributes|
-          @pending_renewal_info << PendingRenewalInfo.new(pending_renewal_attributes)
+      if original_json_response
+
+        @latest_receipt_info = []
+        if latest_receipt_info_attributes = original_json_response['latest_receipt_info']
+          latest_receipt_info_attributes = [latest_receipt_info_attributes] unless latest_receipt_info_attributes.is_a?(Array)
+
+          latest_receipt_info_attributes.each do |latest_receipt_info_attribute|
+            @latest_receipt_info << InAppReceipt.new(latest_receipt_info_attribute)
+          end
         end
+
+        if latest_expired_receipt_info = original_json_response['latest_expired_receipt_info']
+          latest_expired_receipt_info = [latest_expired_receipt_info] unless latest_expired_receipt_info.is_a?(Array)
+
+          latest_expired_receipt_info.each do |latest_expired_receipt|
+            @latest_receipt_info << InAppReceipt.new(latest_expired_receipt)
+          end
+        end
+
+        @pending_renewal_info = []
+        if original_json_response['pending_renewal_info']
+          original_json_response['pending_renewal_info'].each do |pending_renewal_attributes|
+            @pending_renewal_info << PendingRenewalInfo.new(pending_renewal_attributes)
+          end
+        end
+
       end
+
     end
 
     def to_hash
