@@ -34,11 +34,7 @@ module Venice
       @shared_secret = options[:shared_secret] if options[:shared_secret]
       @exclude_old_transactions = options[:exclude_old_transactions] if options[:exclude_old_transactions]
 
-      time = Time.now.to_i
-
-      Rails.logger.debug("DATA #{time}: #{data}")
       json = json_response_from_verifying_data(data, options)
-      Rails.logger.debug("JSON #{time}: #{json}")
       receipt_attributes = json['receipt'].dup if json['receipt']
       receipt_attributes['original_json_response'] = json if receipt_attributes
 
